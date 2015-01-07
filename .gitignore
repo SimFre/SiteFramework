@@ -1,0 +1,8 @@
+
+.*.swp
+._*
+__junk/
+*/__junk/
+files/*
+config/BaseConfig.php
+
