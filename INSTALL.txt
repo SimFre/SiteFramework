@@ -1,0 +1,5 @@
+
+Drop the whole SiteFramework into your htdocs.
+Copy contents of the default folder into htdocs.
+Copy either sample BaseConfig file in the config directory, name it BaseConfig.php.
+

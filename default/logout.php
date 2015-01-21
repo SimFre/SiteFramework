@@ -1,7 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "BaseConfig.php";
 $site->PageID = "Logout";
-$site->Template = "Basic.html";
 $admin->Logout();
 ?>
 
