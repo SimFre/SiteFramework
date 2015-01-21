@@ -1,0 +1,33 @@
+
+Todo:
+
+Create atuh module for SSL client certificate
+http://cweiske.de/tagebuch/ssl-client-certificates.htm
+http://httpd.apache.org/docs/2.2/mod/mod_ssl.html#envvars
+http://techlinux.net/2015/01/restriction-based-client-certificates/
+
+Create auth module for One Time Passwords / Google Authenticator or similar
+
+Update AD auth module with latest adLDAP lib and adapt it to new Admin_Auth class.
+
+Implement support for the whole framework in PostgreSQL
+
+Add support for multiple authentication (two part for example).
+
+In user/pass client, allow https://user:password@..../
+
+Add login modules for:
+ Twitter
+ LinkedIn
+ Facebook
+ Google
+ BankID
+ OpenID Connect
+ Wordpress
+ Yahoo
+ MSN
+ SSL Client Certificate
+ Active Directory
+ LDAP (Generic)
+ HTTP Basic Auth (htaccess)
+

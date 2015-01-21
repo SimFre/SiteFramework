@@ -82,6 +82,9 @@ class Admin_Auth_MySQL extends Admin_Auth {
             UserID as externalReference,
             Username as username,
             Password as password,
+            Firstname as firstname,
+            Surname as surname,
+            Mail as mail,
             IF(Active = 'Yes', 1, 0) as active
          FROM users u
          WHERE u.Mail = '", $mail, "' AND Erased is null
@@ -101,6 +104,9 @@ class Admin_Auth_MySQL extends Admin_Auth {
             UserID as externalReference,
             Username as username,
             Password as password,
+            Firstname as firstname,
+            Surname as surname,
+            Mail as mail,
             IF(Active = 'Yes', 1, 0) as active
          FROM users u
          WHERE u.UserID = '", $externalReference, "' AND Erased is null
@@ -119,11 +125,14 @@ class Admin_Auth_MySQL extends Admin_Auth {
             UserID as externalReference,
             Username as username,
             Password as password,
+            Firstname as firstname,
+            Surname as surname,
+            Mail as mail,
             IF(Active = 'Yes', 1, 0) as active
          FROM users u
          WHERE u.Username = '", $username, "' AND Erased is null
          LIMIT 1
-      ") or error_log(var_export($this->db->error(), true));
+      ") or Log::d($this->db->error());
       
       if ($this->db->num_rows() == 1) {
          $user = $this->db->fetch_object();
@@ -141,7 +150,9 @@ class Admin_Auth_MySQL extends Admin_Auth {
    public function UpdateLastLogin(&$user) {
       $i = $user->getExternalReference();
       $user->setParam("lastLogin", date("Y-m-d H:i:s"));
-      $this->db->q("UPDATE users SET LastIP = '", $_SERVER['REMOTE_ADDR'], "', LastLogin = NOW() WHERE UserID = '", $i, "' limit 1");
+      $this->db->q("UPDATE users SET LastIP = '", $_SERVER['REMOTE_ADDR'], "', LastLogin = NOW() WHERE UserID = '", $i, "' limit 1")
+         or Log::d($this->db->error());
+      
       if ($this->db->affected_rows() == 1) {
          return true;
       }

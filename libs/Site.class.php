@@ -50,7 +50,7 @@ class Site {
          session_start();
          $this->SID = session_id();
          if (isset($_SERVER['SERVER_NAME'])) {
-            setcookie("SID",$this->SID,time()+7*24*3600,'/',$_SERVER['SERVER_NAME']);
+            setcookie(session_name(), session_id(), time()+7*24*3600, '/', $_SERVER['SERVER_NAME']);
          }
          header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
          header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past

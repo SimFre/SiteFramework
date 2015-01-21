@@ -92,10 +92,10 @@ class UploadedFile {
    
    function delete() {
       $this->AvailableTo = date("Y-m-d H:i:s");
-      $this->Eraser = $this->admin->uid;
+      $this->Eraser = $this->admin->profileId;
       $this->db->q("
          UPDATE files SET
-            Eraser = '", $this->admin->uid, "',
+            Eraser = '", $this->admin->profileId, "',
             Erased = NOW(),
             AvailableTo = NOW()
          WHERE

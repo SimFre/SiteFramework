@@ -107,11 +107,10 @@ class Admin_Auth_Simple {
    }
    
    public function AddUser($username) {
-      $uid = 0;
-      return $uid;
+      return 0;
    }
 
-   public function DeleteUser($uid) {
+   public function DeleteUser($userId) {
       return true;
    }
 }

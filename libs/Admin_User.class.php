@@ -12,17 +12,17 @@ class Admin_User {
    protected $password;
    protected $authModule;
    protected $firstname;
-   protected $lastname;
-   protected $uid = 0;
+   protected $surname;
    protected $mail;
    protected $externalReference;
 
    protected $keys;
    
    public function __construct($moduleName, $params = null) {
+      //Log::d(var_export($params, true));
       $this->setValidKeys();
       $this->setParam("authModule", $moduleName);
-      if (is_object($params) || is_array($params)) {
+      if (is_object($params) || is_array($params)) {
          foreach($params as $key => $value) {
             $this->setParam($key, $value);
          }
@@ -37,13 +37,9 @@ class Admin_User {
       return $this->getParam("externalReference");
    }
 
-   public function getUid() {
-      return $this->getParam("uid");
-   }
-   
    // Function to retrieve various params.
    public function getParam($key) {
-      if (in_array($key, $this->keys)) {
+      if (isset($this->keys[$key])) {
          return $this->$key;
       }
       else {
@@ -57,13 +53,14 @@ class Admin_User {
    
    // Function to set availale parameters and sanitize the data type/value.
    public function setParam($key, $value) {
-      error_log("Key: $key Value: $value Type: " . $this->keys[$key]);
-      if (in_array($key, $this->keys)) {
+      Log::d("Key: $key Value: $value Type: " . @$this->keys[$key]);
+      //Log::d("All keys: " . var_export($this->keys, true));
+      if (isset($this->keys[$key])) {
          $type = $this->keys[$key];
          
          if ($type == TYPE_BOOLEAN && is_bool($value)) {
             $this->$key = $value;
-            error_log("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
+            Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
             return true;
          }
          
@@ -74,7 +71,7 @@ class Admin_User {
                case "true":
                case "1":
                   $this->$key = true;
-                  error_log("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
+                  Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
                   return true;
                
                case "no":
@@ -82,39 +79,38 @@ class Admin_User {
                case "false":
                case "0":
                   $this->$key = false;
-                  error_log("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
+                  Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
                   return true;
                
                default:
                   $this->$key = (bool) $value;
-                  error_log("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
+                  Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
                   return true;;
             }
             $this->$key = $value;
-            error_log("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
+            Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
             return true;
          }
          
          elseif ($type == TYPE_INT) {
             $this->$key = (int) $value;
-            error_log("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
+            Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
             return true;
          }
          
          elseif ($type == TYPE_STRING) {
             $this->$key = (string) $value;
-            error_log("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
+            Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
             return true;
          }
       }
-      error_log("return false");
+      Log::d("return false");
       return false;
    }
    
    public function getPassword() {
       return $this->getParam("password");
    }
-      
    
    public function setPassword($password) {
       return $this->setParam("password", $password);
@@ -127,8 +123,7 @@ class Admin_User {
          "password" => TYPE_STRING,
          "authModule" => TYPE_STRING,
          "firstname" => TYPE_STRING,
-         "lastname" => TYPE_STRING,
-         "uid" => TYPE_INT,
+         "surname" => TYPE_STRING,
          "mail" => TYPE_STRING,
          "externalReference" => TYPE_STRING
       );

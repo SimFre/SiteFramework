@@ -1,6 +1,6 @@
 <?php
 class Admin {  
-   public $uid = 0;
+   //public $uid = 0;
    public $groups = Array();
    
    // Make sure that the timeout is within the confines of session expiry and garbage collection.
@@ -11,11 +11,6 @@ class Admin {
    public $username = "";
    public $groupError = "/admin/groupFail.php";
    public $default_language = "xx_XX";
-
-   public $lastLogin;
-   public $firstname;
-   public $surname;
-   public $email;
    public $validateSameIP = false;
 
    public $loginFieldModule = "login_module";
@@ -27,9 +22,15 @@ class Admin {
    protected $authProcessHasRun = false;
    protected $authModules;
    protected $defaultAuthModule;
+   
+   public $profile;
+   public $profileId = 0;
 
    public function __construct() {
       $this->authModules = Array();
+      if(session_id() == "") {
+         session_start();
+      }
    }
 
    public function __toString() {
@@ -83,9 +84,9 @@ class Admin {
          $_SESSION[$this->loginSessionBase]['errno'] = $error;
       }
 
-      elseif (!isset($_SESSION[$this->loginSessionBase]['uid'])) {
+      elseif (!isset($_SESSION[$this->loginSessionBase]['externalReference'])) {
          $error = 3;
-         $errorMessage = "UID not registered in session.";
+         $errorMessage = "externalReference not registered in session.";
          $_SESSION[$this->loginSessionBase]['errno'] = $error;
       }
 
@@ -95,7 +96,7 @@ class Admin {
          $_SESSION[$this->loginSessionBase]['errno'] = $error;
       }
       
-      elseif (!isset($_SESSION[$this->loginSessionBase]['authModule'])) {
+      elseif (!isset($_SESSION[$this->loginSessionBase]['moduleName'])) {
          $error = 5;
          $errorMessage = "No authentication module used.";
       }
@@ -114,15 +115,19 @@ class Admin {
       }
       
       if ($error > 0) {
-
          $m = $this->getDesiredModule();
          $user = $this->authModules[$m]->authenticate();
-         error_log("AuthMod: $m");
-         error_log(var_export($user, true));
+         //error_log("AuthMod: $m");
+         //error_log(var_export($user, true));
+         //error_log("Active: " . $user->isActive());
          if ($user !== false && $user->isActive()) {
+            Log::d("Authentication success!");
+            Log::d($user);
             $this->Success($user);
          }
          else {
+            Log::d("Authentication failure!");
+            Log::d("Module: $m, Error: $error");
             $this->Fail("Bad credentials");
          }
 
@@ -131,7 +136,7 @@ class Admin {
          $externalReference = $_SESSION[$this->loginSessionBase]['externalReference'];
          $m = $_SESSION[$this->loginSessionBase]['moduleName'];
          $user = $this->authModules[$m]->Test_UID($externalReference);
-         error_log(var_export($user, true));
+         Log::d(var_export($user, true));
          if ($user !== false && $user->isActive()) {
             $this->Success($user, "keepalive");
          }
@@ -185,12 +190,12 @@ class Admin {
    //}
       
    protected function Fail($reason) {
-      error_log("Fail: $reason");
+      Log::d("Fail: $reason");
       $_SESSION[$this->loginSessionBase]['error'] = $reason;
       $this->errorReason = $reason;
    }
 
-   protected function Success($user = true, $flag = null) {
+   protected function Success($user, $flag = null) {
       //error_log("Success");
       unset($_SESSION[$this->loginSessionBase]['errno']);
       $moduleName = $user->getAuthModule();
@@ -218,15 +223,17 @@ class Admin {
             ini_get("session.cookie_httponly")
          );
       }
+      
+      // Retrieve a profile
+      $this->profile = $this->profile->getByUser($user, true);
+      $this->profileId = (int) $this->profile->getId();
+      Log::d($this->profile);
+      Log::d($this->profileId);
 
-      //$this->uid      = $user->uid;
-      //$this->username = $user->username;
-      //$this->language = $user->language;
-      //$this->firstname = $user->firstname;
-      //$this->surname = $user->surname;
-      //$this->email = $user->email;
+      // Set the login time in session.
       $_SESSION[$this->loginSessionBase]['timestamp'] = time();
       unset($_SESSION[$this->loginSessionBase]['error']);
+      
       //$this->SetGroups($user);
       $this->loggedIn = $user;
       return $user;
@@ -235,7 +242,7 @@ class Admin {
    public function Logout() {
       unset(
          $_SESSION[$this->loginSessionBase]['ip'],
-         $_SESSION[$this->loginSessionBase]['uid'],
+         //$_SESSION[$this->loginSessionBase]['uid'],
          $_SESSION[$this->loginSessionBase]['externalReference'],
          $_SESSION[$this->loginSessionBase]['timestamp'],
          $_SESSION[$this->loginSessionBase]['error'],
@@ -276,6 +283,10 @@ class Admin {
    
    protected function ChangeLanguageUpdate($user, $language) {
       return;
+   }
+   
+   public function setProfile($profile) {
+      $this->profile = $profile;
    }
    
    protected function getDesiredModule() {

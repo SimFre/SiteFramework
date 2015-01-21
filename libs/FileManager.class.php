@@ -153,7 +153,7 @@ class FileManager {
                ", $size, ",
                '", $hash, "',
                '", $tempFilename, "',
-               '", $this->admin->uid, "',
+               '", $this->admin->profileId, "',
                NOW(),
                '", $MIME, "'
             )
