@@ -9,4 +9,6 @@ This package also features upload file handling, and yet another MySQL abstracti
 
 Give it a try, let me know if you like it or if not - what you didn't.
 
+License: GPL3
+
 Simon Fredriksson
