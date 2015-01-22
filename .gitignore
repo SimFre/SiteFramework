@@ -2,8 +2,7 @@
 .project
 .*.swp
 ._*
-__junk/
 */__junk/
-files/*
+default/files/*
 config/BaseConfig.php
 

@@ -5,7 +5,7 @@ class UploadedFile {
    public $admin;
    public $basepath;
    public $online = false;
-   
+
    protected $FileID;
    protected $CatID;
    protected $Size;
@@ -37,7 +37,7 @@ class UploadedFile {
       $this->admin = &$admin;
       $this->basepath = $path;
    }
-   
+
    function __get($key) {
       if (property_exists($this, $key)) {
          return $this->$key;
@@ -46,7 +46,7 @@ class UploadedFile {
          return null;
       }
    }
-   
+
    function __set($key, $value) {
       if (property_exists($this, $key)) {
          if ($value != $this->$key) {
@@ -56,11 +56,11 @@ class UploadedFile {
                   case "Category":
                   return $this->move($value, $this->Filename);
                   break;
-                  
+
                   case "Filename":
                   return $this->move($this->CatID, $value);
                   break;
-                  
+
                   case "Language":
                   case "SHA1":
                   case "FileID":
@@ -89,7 +89,7 @@ class UploadedFile {
          return false;
       }
    }
-   
+
    function delete() {
       $this->AvailableTo = date("Y-m-d H:i:s");
       $this->Eraser = $this->admin->profileId;
@@ -103,7 +103,7 @@ class UploadedFile {
          LIMIT 1
       ");
    }
-   
+
    function purge() {
       //$this->db->q("DELETE FROM files WHERE FileID = '", $this->FileID, "' LIMIT 1");
       $p = $this->basepath . "/" . $this->Language . "/" . $this->Folder;
@@ -113,7 +113,7 @@ class UploadedFile {
          rmdir($p);
       }
    }
-   
+
    private function move($Category, $Filename) {
       //error_log("Starting");
       $Folder = "";
@@ -143,7 +143,7 @@ class UploadedFile {
             return false;
          }
       }
-      
+
       //error_log("GOGO");
 
       $source = $this->basepath . '/'. $this->Language . '/' . $this->Folder . '/' . $this->RealName;
@@ -155,7 +155,7 @@ class UploadedFile {
             return false;
          }
       }
-      
+
       // Make sure the file gets a unique filename
       $search  = "âáàåäöôóòéèêøüûÜÛÂÁÀÅÄÖÔÓÒÉÈÊØç";
       $replace = "aaaaaooooeeeouuUUAAAAAOOOOEEEOc";
@@ -170,14 +170,14 @@ class UploadedFile {
       $s[] = "Œ"; $r[] = "OE";
       $s[] = "œ"; $r[] = "oe";
       $s[] = "ß"; $r[] = "ss";
-      
+
 
       $Filename = str_replace($s, $r, $Filename);
       $Filename = preg_replace('/(\.\.|[^A-Za-z0-9\.\-_])/', "_", $Filename);
-      
+
       $fx = array($Filename);
       $loop = 0;
-      
+
       $originalFilename = $Filename;
       $newfilename = $Filename;
       // In case of filename-collition... set a number on the file.
@@ -213,7 +213,7 @@ class UploadedFile {
                FileID = ", $this->FileID, "
             LIMIT 1
          ");
-         
+
          return true;
       }
       else {

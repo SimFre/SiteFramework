@@ -1,11 +1,11 @@
 <?php
-class Admin {  
+class Admin {
    //public $uid = 0;
    public $groups = Array();
-   
+
    // Make sure that the timeout is within the confines of session expiry and garbage collection.
    public $timeout = 900;
-   
+
    public $login = false; //= "/admin/login.php";
    public $return = "/admin/index.php";
    public $username = "";
@@ -22,7 +22,7 @@ class Admin {
    protected $authProcessHasRun = false;
    protected $authModules;
    protected $defaultAuthModule;
-   
+
    public $profile;
    public $profileId = 0;
 
@@ -57,7 +57,7 @@ class Admin {
          exit();
       }
    }
-   
+
    public function AutomaticAuth() {
       //error_log("autoatuth");
       //sleep(1); // Prevent brute force attacks
@@ -69,7 +69,7 @@ class Admin {
       else {
          $this->authProcessHasRun = true;
       }
-      
+
       if (!isset($_SESSION[$this->loginSessionBase]['ip']) || !isset($_SESSION[$this->loginSessionBase]['timestamp'])) {
          $error = 1;
          $errorMessage = "IP or timestamp not registered.";
@@ -95,25 +95,25 @@ class Admin {
          $errorMessage = "Login has expired.";
          $_SESSION[$this->loginSessionBase]['errno'] = $error;
       }
-      
+
       elseif (!isset($_SESSION[$this->loginSessionBase]['moduleName'])) {
          $error = 5;
          $errorMessage = "No authentication module used.";
       }
-      
+
       elseif (count($this->authModules) < 1) {
          $error = 6;
          $errorMessage = "No authentication module loaded.";
          $this->Fail($errorMessage);
          return;
       }
-      
+
       else {
          $error = 0;
          $errorMessage = "No error.";
          $_SESSION[$this->loginSessionBase]['errno'] = $error;
       }
-      
+
       if ($error > 0) {
          $m = $this->getDesiredModule();
          $user = $this->authModules[$m]->authenticate();
@@ -161,7 +161,7 @@ class Admin {
          return false;
       }
    }
-   
+
    public function RequireGroup($groupName) {
       if (!in_array($groupName, $this->groups)) {
          header("HTTP/1.0 401 Unauthorized");
@@ -170,7 +170,7 @@ class Admin {
       }
       return true;
    }
-   
+
    public function StorePassword($password, $user = null) {
       // Store a password for the user.
       // Require: a password to set.
@@ -178,17 +178,17 @@ class Admin {
       // Return: boolean
       return false;
    }
-   
+
    // List all available groups
    public function ListGroups() {
       return array();
    }
-   
+
    //public function SetGroups($user) {
    //   $m = $user->getAuthModule();
    //   $this->groups = $this->authModules[$m]->getGroups();
    //}
-      
+
    protected function Fail($reason) {
       Log::d("Fail: $reason");
       $_SESSION[$this->loginSessionBase]['error'] = $reason;
@@ -208,7 +208,7 @@ class Admin {
       if ($flag == null) {
          $this->authModules[$moduleName]->UpdateLastLogin($user);
       }
-      
+
       //if (isset($_POST[$this->loginFieldRemember]) || isset($_COOKIE[$this->loginFieldRemember])) {
       if (isset($_POST[$this->loginFieldRemember]) || isset($_SESSION[$this->loginSessionBase][$this->loginFieldRemember])) {
          //$params = session_get_cookie_params();
@@ -218,12 +218,12 @@ class Admin {
             session_id(),
             time() + ini_get("session.gc_maxlifetime"),
             $this->loginCookiePath,
-            $_SERVER['HTTP_HOST'], 
+            $_SERVER['HTTP_HOST'],
             ini_get("session.cookie_secure"),
             ini_get("session.cookie_httponly")
          );
       }
-      
+
       // Retrieve a profile
       $this->profile = $this->profile->getByUser($user, true);
       $this->profileId = (int) $this->profile->getId();
@@ -233,12 +233,12 @@ class Admin {
       // Set the login time in session.
       $_SESSION[$this->loginSessionBase]['timestamp'] = time();
       unset($_SESSION[$this->loginSessionBase]['error']);
-      
+
       //$this->SetGroups($user);
       $this->loggedIn = $user;
       return $user;
    }
-   
+
    public function Logout() {
       unset(
          $_SESSION[$this->loginSessionBase]['ip'],
@@ -262,7 +262,7 @@ class Admin {
       $this->errorReason = null;
       $this->authProcessHasRun = false;
    }
-      
+
    public function ChangeLanguage($language, $user = null) {
       $setLang = "";
       $langList = explode(",", $this->languageList);
@@ -280,15 +280,15 @@ class Admin {
          }
       }
    }
-   
+
    protected function ChangeLanguageUpdate($user, $language) {
       return;
    }
-   
+
    public function setProfile($profile) {
       $this->profile = $profile;
    }
-   
+
    protected function getDesiredModule() {
       $m = "zzzzUNSETzzzz";
       if (isset($_REQUEST[$this->loginFieldModule])) {

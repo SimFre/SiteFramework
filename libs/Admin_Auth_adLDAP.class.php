@@ -1,16 +1,16 @@
 <?php
 
 // http://forums.devshed.com/ldap-programming-76/ldapsearch-for-ad-disabled-accounts-466619.html
-// 1.1 The format of the LDAP Matching Rule has the following syntax: 
+// 1.1 The format of the LDAP Matching Rule has the following syntax:
 // attributename:ruleOID:=value
 // attributename: is the LDAPDisplayName of the attribute, like "userAccountControl".
 // ruleOID : is 1.2.840.113556.1.4.803 for the LDAP_MATCHING_RULE_BIT_AND rule, which is TRUE if all bits match the value,
 // value : is the decimal value that represents the bits to match.
 // By combining the above knowledge we can make the following filters;
-// 
+//
 // 1st Filter: "(&(objectClass=User)(userAccountControl:1.2.840.113556.1.4.803:=2))"
 // This filter will get all the users with disable account.
-// 
+//
 // 2nd Filter: "(&(objectClass=User)(!userAccountControl:1.2.840.113556.1.4.803:=2))"
 // This filter will get all the users with enable accounts.
 error_reporting(E_ALL);
@@ -29,7 +29,7 @@ class Admin_Auth_adLDAP extends Admin {
    private $connected = false;
 
    public function __construct() {
-      parent::__construct();      
+      parent::__construct();
       $this->ad_group_map = Array();
       //$this->language_lookup = Array("EN" => "en_US");
    }
@@ -46,7 +46,7 @@ class Admin_Auth_adLDAP extends Admin {
    //   }
    //   return $this->connected;
    //}
-   
+
    private function ad() {
       if ($this->connected === false) {
          $this->connected = new adLDAP(
@@ -63,7 +63,7 @@ class Admin_Auth_adLDAP extends Admin {
       }
       return $this->connected;
    }
-   
+
    public function ListGroups() {
       //Lists all available/configured groups.
       //ldap_group_map['lang']
@@ -123,7 +123,7 @@ class Admin_Auth_adLDAP extends Admin {
          return false;
       }
    }
-   
+
    public function Test_User($username, $password) {
       $user = false;
       if ($this->ad()->authenticate($username, $password)) {
@@ -134,7 +134,7 @@ class Admin_Auth_adLDAP extends Admin {
       }
       return $user;
    }
-   
+
    //function languageLookup($lang) {
    //   if (isset($this->language_lookup[$lang])) {
    //      return $this->language_lookup[$lang];
@@ -143,17 +143,17 @@ class Admin_Auth_adLDAP extends Admin {
    //      return reset($this->language_lookup);
    //   }
    //}
-   
+
    public function AddUser($username) {
       $adInfo = $this->ad()->user_info($username . $this->account_suffix, array("*"));
       if (is_array($adInfo)) {
-         $ext = $this->ad()->decodeGuid($adInfo[0]['objectguid'][0]);      
+         $ext = $this->ad()->decodeGuid($adInfo[0]['objectguid'][0]);
          $this->db->q("SELECT UserID FROM users WHERE ExternalReference='", $ext, "' and Type='ActiveDirectory' and Erased=0");
          if ($this->db->num_rows()) {
             $dbData = $this->db->fetch_assoc();
             return $dbData['UserID'];
          }
-         
+
          else {
             $this->db->q("
                INSERT INTO users (Username, Mail, Firstname, Surname, Active, Language, Type, Created, ExternalReference) VALUES (
@@ -168,7 +168,7 @@ class Admin_Auth_adLDAP extends Admin {
                   '", $ext, "'
                )
             ");
-            
+
             return $this->db->insert_id();
          }
       }
@@ -176,7 +176,7 @@ class Admin_Auth_adLDAP extends Admin {
          return -1;
       }
    }
-   
+
    public function DeleteUser($uid) {
       $uid = (int) $uid;
       $this->db->q("UPDATE users SET Erased = NOW() WHERE UserID = $uid");
@@ -205,7 +205,7 @@ class Admin_Auth_adLDAP extends Admin {
          return false;
       }
    }
-   
+
    public function UpdateLastLogin($user = null) {
       if (is_null($user)) {
          $user = &$this;

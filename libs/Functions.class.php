@@ -8,7 +8,7 @@ class Functions {
      $part1 = substr($intostring, 0, $offset);
      $part2 = substr($intostring, $offset);
      return $part1 . $insertstring . $part2;
-   }  
+   }
    static function multidimensionalArrayMap($func, $arr) {
       $newArr = array();
       foreach($arr as $key => $value) {

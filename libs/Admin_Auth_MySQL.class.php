@@ -59,14 +59,14 @@ class Admin_Auth_MySQL extends Admin_Auth {
          $salt .= substr($chars, $c, 1);
       }
       $encpw = crypt($password, $salt);
-      
+
       $this->db->q("
          UPDATE users
          SET    Password = '", $encpw, "', Modified = NOW()
          WHERE  UserID = ", $user->getExternalReference(), "
          LIMIT 1
       ");
-      
+
       if ($this->db->affected_rows() == 1) {
          $user->setPassword($encpw);
          return true;
@@ -90,7 +90,7 @@ class Admin_Auth_MySQL extends Admin_Auth {
          WHERE u.Mail = '", $mail, "' AND Erased is null
          LIMIT 1
       ");
-      
+
       if ($this->db->num_rows() == 1) {
          $user = $this->db->fetch_object();
          return new Admin_User($this->moduleName(), $user);
@@ -118,7 +118,7 @@ class Admin_Auth_MySQL extends Admin_Auth {
       }
       return false;
    }
-   
+
    public function Test_User($username, $password) {
       $this->db->q("
          SELECT
@@ -133,7 +133,7 @@ class Admin_Auth_MySQL extends Admin_Auth {
          WHERE u.Username = '", $username, "' AND Erased is null
          LIMIT 1
       ") or Log::d($this->db->error());
-      
+
       if ($this->db->num_rows() == 1) {
          $user = $this->db->fetch_object();
          $currentPassword = $user->password;
@@ -146,13 +146,13 @@ class Admin_Auth_MySQL extends Admin_Auth {
       }
       return false;
    }
-   
+
    public function UpdateLastLogin(&$user) {
       $i = $user->getExternalReference();
       $user->setParam("lastLogin", date("Y-m-d H:i:s"));
       $this->db->q("UPDATE users SET LastIP = '", $_SERVER['REMOTE_ADDR'], "', LastLogin = NOW() WHERE UserID = '", $i, "' limit 1")
          or Log::d($this->db->error());
-      
+
       if ($this->db->affected_rows() == 1) {
          return true;
       }
@@ -160,7 +160,7 @@ class Admin_Auth_MySQL extends Admin_Auth {
          return false;
       }
    }
-   
+
    public function AddUser($username, $options = null) {
       $this->db->q("SELECT UserID FROM users WHERE Username='", $username, "' and Erased is null");
       if ($this->db->num_rows()) {

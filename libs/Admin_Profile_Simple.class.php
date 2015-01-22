@@ -3,7 +3,7 @@
 class Admin_Profile_Simple extends Admin_Profile {
    private   $profileStorage;
    private   $profileCrossref;
-   
+
    public function __construct() {
       $this->profileCrossref['Admin_Auth']['edgar'] = 0;
       $this->profileStorage[0] = Array(
@@ -15,7 +15,7 @@ class Admin_Profile_Simple extends Admin_Profile {
       );
       parent::__construct();
    }
-   
+
    // Create a new profile entry
    // @return int profileId
    protected function create($user) {
@@ -33,14 +33,14 @@ class Admin_Profile_Simple extends Admin_Profile {
       $this->profileCrossref[$m][$r] = $profileId;
       return $profileId;
    }
-   
+
    // Check if profile exists or not
    // @param int profile number
    // @return boolean
    public function idExists($profileId) {
       return isset($this->profileStorage[$profileId]);
    }
-   
+
    // Get the profile number by suppling authentication module name and its reference ID.
    // @return int profile ID or -1 if not found.
    public function getIdByCrossref($module, $ref) {
@@ -63,7 +63,7 @@ class Admin_Profile_Simple extends Admin_Profile {
       $this->active = $data['active'];
       $this->lastLogin = $data['lastLogin'];
    }
-   
+
    // Update a profile with its user details. This is to keep profile in sync with
    // authententication engine. An example is when a person's details change in
    // Active Directory, we want to keep the profile details to match that.

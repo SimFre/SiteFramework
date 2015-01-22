@@ -57,7 +57,7 @@ abstract class Admin_Profile {
       if ($profileId < 0 && $createIfMissing == true) {
          $profileId = $this->create($user);
       }
-      
+
       if ($profileId >= 0) {
          return $this->getById($profileId);
       }

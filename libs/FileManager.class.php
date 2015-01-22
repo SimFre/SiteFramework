@@ -3,7 +3,7 @@ class FileManager {
    public $db;
    public $admin;
    public $path;
-   
+
    function getInfo($FileID, $getDeleted = false) {
       $FileID = (int) $FileID;
       //$this->db->debug = 1;
@@ -56,7 +56,7 @@ class FileManager {
          return false;
       }
    }
-   
+
    function getMenu($Language, $Category) {
       $results->CatID = 0;
       $results->Head = "";
@@ -65,7 +65,7 @@ class FileManager {
       $results->Folder = "";
       $results->Values = array();
       $results->Length = 0;
-      
+
       $catQry = $this->db->q("
          SELECT
             CatID, Name, Language, Folder
@@ -75,7 +75,7 @@ class FileManager {
             Name = '", $Category, "' and Language = '", $Language, "'
          LIMIT 1
       ");
-      
+
       if ($this->db->num_rows() == 1) {
          $v = $this->db->fetch_object();
          $results->CatID = $v->CatID;
@@ -95,7 +95,7 @@ class FileManager {
                AND AvailableTo > NOW()
                ORDER BY Sorting DESC, FileID DESC, Title ASC, Filename ASC
          ");
-         
+
          while ($row = $this->db->fetch_object($fileQuery)) {
             $results->Values[] = $this->getInfo($row->FileID);
             $results->Length++;
@@ -104,13 +104,13 @@ class FileManager {
 
       return $results;
    }
-   
+
    //function upload($Field = "File", $Category = "Misc", $Title = null, $Menu = null, $Language) {
    function upload($Language, $Field = "File") {
       if (!array_key_exists($Field, $_FILES)) {
          return false;
       }
-      
+
       $targetDirectory = $this->path . '/' . $Language . '/Default';
       if (!is_dir($targetDirectory)) {
          if (!mkdir($targetDirectory, 0777, true)) {
@@ -118,7 +118,7 @@ class FileManager {
             return false;
          }
       }
-      
+
       // Make sure the file gets a unique filename
       $originalFilename = $_FILES[$Field]['name'];
       $tempFilename = uniqid();
@@ -142,7 +142,7 @@ class FileManager {
          rmdir($tempPath);
          $hash = sha1_file($path);
          $size = $_FILES[$Field]['size'];
-         
+
          //if ($MIME == "Sorry, couldn't determine file type.") {
          $sql = $this->db->q("
             INSERT INTO files

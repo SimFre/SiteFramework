@@ -62,11 +62,11 @@ class Admin_Auth_Simple {
    public function ListGroups() {
       return array();
    }
-   
+
    public function SetGroups($user) {
       return 0;
    }
-   
+
    public function Test_Mail($mail) {
       // Get user profile from e-mail address.
       foreach($this->users as $user) {
@@ -98,14 +98,14 @@ class Admin_Auth_Simple {
       }
       return false;
    }
-      
+
    public function UpdateLastLogin(&$user) {
       $i = $user->getExternalReference();
       $user->setParam("lastLogin", date("Y-m-d H:i:s"));
       $this->uids[$i] = $user;
       return true;
    }
-   
+
    public function AddUser($username) {
       return 0;
    }

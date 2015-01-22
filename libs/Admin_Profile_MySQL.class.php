@@ -3,7 +3,7 @@
 class Admin_Profile_MySQL extends Admin_Profile {
    protected $rawProfileData;
    protected $db;
-   
+
    public function __construct(&$db) {
       $this->db = $db;
       parent::__construct();
@@ -19,14 +19,14 @@ class Admin_Profile_MySQL extends Admin_Profile {
             now(),
             '", $user->getParam("firstname"),"',
             '", $user->getParam("surname"), "',
-            '", $user->getParam("mail"),"'  
+            '", $user->getParam("mail"),"'
          )
       ");
       $profileId = $this->db->insert_id();
       $this->createAuthentication($user->getAuthModule(), $user->getExternalReference(), $profileId);
       return $profileId;
    }
-   
+
    // Check if profile exists or not
    // @param int profile number
    // @return boolean
@@ -52,7 +52,7 @@ class Admin_Profile_MySQL extends Admin_Profile {
             and ExternalReference = '", $ref, "'
             and Erased is null
          limit 1
-      "); 
+      ");
 
       if ($this->db->num_rows() == 0) {
          return -1;
@@ -108,7 +108,7 @@ class Admin_Profile_MySQL extends Admin_Profile {
             now()
          )
       ");
-      return $this->db->insert_id();               
+      return $this->db->insert_id();
    }
 
    // Get profile data
@@ -139,7 +139,7 @@ class Admin_Profile_MySQL extends Admin_Profile {
             and erased is null
          limit 1
       ");
-             
+
       if ($this->db->num_rows() == 0) {
          Log::d($this->db->error());
          return false;

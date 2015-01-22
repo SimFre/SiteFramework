@@ -17,7 +17,7 @@ class Admin_User {
    protected $externalReference;
 
    protected $keys;
-   
+
    public function __construct($moduleName, $params = null) {
       //Log::d(var_export($params, true));
       $this->setValidKeys();
@@ -28,7 +28,7 @@ class Admin_User {
          }
       }
    }
-   
+
    public function getAuthModule() {
       return $this->getParam("authModule");
    }
@@ -46,24 +46,24 @@ class Admin_User {
          return false;
       }
    }
-   
+
    public function isActive() {
       return $this->getParam("active");
    }
-   
+
    // Function to set availale parameters and sanitize the data type/value.
    public function setParam($key, $value) {
       Log::d("Key: $key Value: $value Type: " . @$this->keys[$key]);
       //Log::d("All keys: " . var_export($this->keys, true));
       if (isset($this->keys[$key])) {
          $type = $this->keys[$key];
-         
+
          if ($type == TYPE_BOOLEAN && is_bool($value)) {
             $this->$key = $value;
             Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
             return true;
          }
-         
+
          elseif ($type == TYPE_BOOLEAN && is_string($value)) {
             switch (strtolower($value)) {
                case "yes":
@@ -73,7 +73,7 @@ class Admin_User {
                   $this->$key = true;
                   Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
                   return true;
-               
+
                case "no":
                case "n":
                case "false":
@@ -81,7 +81,7 @@ class Admin_User {
                   $this->$key = false;
                   Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
                   return true;
-               
+
                default:
                   $this->$key = (bool) $value;
                   Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
@@ -91,13 +91,13 @@ class Admin_User {
             Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
             return true;
          }
-         
+
          elseif ($type == TYPE_INT) {
             $this->$key = (int) $value;
             Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
             return true;
          }
-         
+
          elseif ($type == TYPE_STRING) {
             $this->$key = (string) $value;
             Log::d("Key: {$key} Value: {$this->$key} Type: " . $this->keys[$key]);
@@ -107,15 +107,15 @@ class Admin_User {
       Log::d("return false");
       return false;
    }
-   
+
    public function getPassword() {
       return $this->getParam("password");
    }
-   
+
    public function setPassword($password) {
       return $this->setParam("password", $password);
    }
-   
+
    protected function setValidKeys() {
       $this->keys = array(
          "active" => TYPE_BOOLEAN,

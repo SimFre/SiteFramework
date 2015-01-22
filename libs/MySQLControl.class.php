@@ -1,7 +1,7 @@
 <?php
 class MySQLControl {
    // Version timestamp: 2008-12-23 09:41:56
-   
+
    //
    // MySQL Specific instructions.
    public $hostname = "localhost";
@@ -162,7 +162,7 @@ class MySQLControl {
       else {
          $r = &$resource;
       }
-      
+
       if (is_bool($r)) {
          return 0;
       }

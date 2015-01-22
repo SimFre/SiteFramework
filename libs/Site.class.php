@@ -42,7 +42,7 @@ class Site {
       $this->Domains = array('.*' => "en_US");
       $this->Languages = array("en_US" => "en_US");
       $this->Language = "en_US";
-      
+
       if (!headers_sent()) {
          ini_set("session.use_cookies", 1);
          ini_set("session.use_only_cookies", 0);
@@ -56,7 +56,7 @@ class Site {
          header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
       }
    }
-   
+
    function __destruct() {
       if (is_null($this->PageID)) {
          $this->__set("PageID", "");
@@ -67,7 +67,7 @@ class Site {
          $C = $this->Content;
          $C['BODY'] = ob_get_contents(); // This might cause memory issues in the future.
          ob_clean();
-         
+
          $admin = &$this->admin;
          $site = &$this;
          $db = &$this->db;
@@ -78,7 +78,7 @@ class Site {
 
          // This is how we can catch php-code if we want to later:
          // '/<\?php\s+(.*)\s+\?'.'>/mi'
-         
+
          $template = $this->Render($template);
          // $template = preg_replace_callback(
          //    '/{\|([A-Za-z0-9_]+)\|}/',
@@ -154,7 +154,7 @@ class Site {
             return $this->Languages;
       }
    }
-   
+
    function __set($key, $value) {
       switch ($key) {
          case "Debug":
@@ -175,7 +175,7 @@ class Site {
                (PageID = '' OR PageID = '",$this->PageID,"')
                ORDER BY AttributeName ASC, PageID ASC
             ");
-            
+
             while($arr = $this->db->fetch_assoc()) {
                $n = $arr['AttributeName'];
                $c = $arr['ContentType'];
@@ -210,9 +210,9 @@ class Site {
          return reset($this->Languages);
       }
       // elseif (preg_match('/\.(se|dk|no)$/i', $_SERVER['HTTP_HOST'], $language)) {
-      //    
+      //
       //    // This should use patterns found in $this->Domains instead. Fallback is first lang.
-      //    
+      //
       //    switch ($language[1]) {
       //       case 'se': return 'sv_SE';
       //       case 'dk': return 'da_DK';
@@ -232,17 +232,17 @@ class Site {
    //   if (!array_key_exists($Field, $_FILES)) {
    //      return false;
    //   }
-   //   
+   //
    //   if (!is_dir($targetDirectory)) {
    //      if (!mkdir($targetDirectory)) {
    //         error_log("Could not create: " . $targetDirectory);
    //         return false;
    //      }
    //   }
-   //   
+   //
    //   // Make sure the file gets a unique filename
    //   $filename = $_FILES[$Field]['name'];
-   //   
+   //
    //   $search  = "‚·‡Â‰ˆÙÛÚÈËÍ¯Ê¬¡¿≈ƒ÷‘”“…» ÿ∆";
    //   $replace = "aaaaaooooeeeoaAAAAAOOOOEEEOA";
    //   $s = array();
@@ -253,10 +253,10 @@ class Site {
    //   }
    //   $filename = str_replace($s, $r, $filename);
    //   $filename = preg_replace('/(\.\.|[^A-Za-z0-9\.\-_])/', "_", $filename);
-   //   
+   //
    //   $fx = array($filename);
    //   $loop = 0;
-   //   
+   //
    //   $originalFilename = $filename;
    //   $newfilename = $filename;
    //   // In case of filename-collition... set a number on the file.
@@ -324,7 +324,7 @@ class Site {
    function Input($type = "text", $name = false, $value = null, $selectedValue = false, $extra = null) {
       $validTypes = array("submit","button","reset","image","textarea","radio","checkbox","select");
       if (!$name) { $name = md5(microtime(true)); }
-      
+
       switch($type) {
          case 'button':
          case 'hidden':
@@ -362,7 +362,7 @@ class Site {
          case 'textarea':
             $out = "<textarea name=\"$name\" $extra>$value</textarea>";
          break;
-         
+
          default:
             $out = "";
          break;
@@ -374,7 +374,7 @@ class Site {
       $Input = null;
       if ($Reference) { $Input = &$InputData; }
       else { $Input = $InputData; }
-      
+
       if (is_array($Input)) {
          $InputArray = &$Input;
          $ReturnType = "array";
@@ -383,7 +383,7 @@ class Site {
          $InputArray[0] = &$Input;
          $ReturnType = "single";
       }
-      
+
       foreach ($InputArray as $key => $value) {
          if (is_array($value)) {
             $value = call_user_func(array($this, __FUNCTION__), $value, $Reference, $ContentType);
@@ -396,16 +396,16 @@ class Site {
                   $value = str_replace("\r", "\n", $value);
                   $value = str_replace("\n", "\\n", $value);
                break;
-               
+
                case "text/php":
                   $value = "return <<<EOT\n" . $value . "\nEOT;\n";
                   $value = eval($value);
                break;
-            
+
                case "text/html":
                   // Don't do anything, asume it's properly formatted.
                break;
-            
+
                case "text/nobr":
                   $value = htmlspecialchars($value);
                   $value = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $value);
@@ -421,7 +421,7 @@ class Site {
          }
          $InputArray[$key] = $value;
       }
-      
+
       if ($ReturnType == "single") {
          return $InputArray[0];
       }
@@ -490,7 +490,7 @@ class Site {
          case "SESSION": $base = $_SESSION; break;
          default: return false;
       }
-      
+
       foreach($Params as $key => $value) {
          if (isset($base[$value])) {
             $base = $base[$value];
@@ -541,7 +541,7 @@ class Site {
       //while ($c = $this->db->fetch_assoc()) {
       //   $this->Config[$c['ParamName']] = $c['ParamValue'];
       //}
-   }   
+   }
 
    function setLogRequest($log = null) {
       if (is_null($log)) {
@@ -565,7 +565,7 @@ class Site {
       if ($this->Session('Language') == "") {
          $_SESSION['Language'] = $this->getDefaultLanguage();
       }
-      
+
       if (($this->Get("Language") != $this->Session("Language")) && ($this->Get("Language") != "")) {
          $l = $this->Get("Language");
          if (array_key_exists($l, $this->Languages)) {

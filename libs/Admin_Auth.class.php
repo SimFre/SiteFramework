@@ -14,7 +14,7 @@ abstract class Admin_Auth {
       $this->groups = Array();
       $this->moduleName(__CLASS__);
    }
-   
+
    function __toString() {
       return $this->authModuleName;
    }
@@ -33,15 +33,15 @@ abstract class Admin_Auth {
    public function ListGroups() {
       return $this->groups;
    }
-   
+
    // Do the actual authentication if none is currently present.
    // @return user object (Admin_User) or false
    abstract public function authenticate();
-   
+
    // Fetch groups belonging to $user and set internal array.
    // @return int (number of groups)
    abstract public function SetGroups($user);
-   
+
    // Store new password for current user or other user if given.
    // @return boolean
    abstract public function StorePassword($password, &$users);
@@ -57,11 +57,11 @@ abstract class Admin_Auth {
    // Get user profile from username and password.
    // @return false or user-object.
    //abstract public function Test_User($username, $password);
-   
+
    // Set last login tiestamp for user.
    // @return boolean
    abstract public function UpdateLastLogin(&$user);
-   
+
    // Add user account
    // @return user ID number (int).
    abstract public function AddUser($username);
@@ -69,7 +69,7 @@ abstract class Admin_Auth {
    // Delete user account
    // @return boolean
    abstract public function DeleteUser($uid);
-   
+
    // Change language on user account.
    // @return void
    //abstract private function ChangeLanguageUpdate(&$user, $language);

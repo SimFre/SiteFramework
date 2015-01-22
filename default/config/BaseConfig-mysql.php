@@ -18,7 +18,7 @@ $site = new Site();
 $site->StripPasswords = true;
 $site->Domains = Array(
    '/localhost/'         => "en_US"
-); 
+);
 $site->TemplatePath = ROOT . "templates";
 $site->FilesPath    = ROOT . "files";
 $site->Template     = "Basic.html";
