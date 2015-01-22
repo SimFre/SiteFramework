@@ -3,7 +3,10 @@ error_reporting(E_ALL);
 set_time_limit(300);
 ini_set("session.gc_maxlifetime", 3600 * 24 * 7);
 define("ROOT", $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
-define("SF_PATH", ROOT . DIRECTORY_SEPARATOR);
+define("SF_PATH", ROOT . "SiteFramework" . DIRECTORY_SEPARATOR);
+
+require_once SF_PATH. "libs" . DIRECTORY_SEPARATOR . "Log.class.php";
+Log::$enabled = false;
 
 require_once SF_PATH. "libs" . DIRECTORY_SEPARATOR . "MySQLControl.class.php";
 $db = new MySQLControl();
@@ -32,8 +35,8 @@ require_once SF_PATH. "libs" . DIRECTORY_SEPARATOR . "Admin_Auth_MySQL.class.php
 require_once SF_PATH. "libs" . DIRECTORY_SEPARATOR . "Admin_Profile.class.php";
 require_once SF_PATH. "libs" . DIRECTORY_SEPARATOR . "Admin_Profile_MySQL.class.php";
 $admin = new Admin();
-$admin->addAuthModule(new Admin_Auth_MySQL($db));
 $site->admin    = &$admin;
+$admin->addAuthModule(new Admin_Auth_MySQL($db));
 $admin->setProfile(new Admin_Profile_MySQL($db));
 $admin->timeout = 3600 * 24 * 6;
 $admin->login   = "login.php";
@@ -51,4 +54,5 @@ $site->FileManager->db    = &$site->db;
 $site->FileManager->admin = &$site->admin;
 $site->FileManager->path  = $site->FilesPath;
 $FileManager = &$site->FileManager;
+
 ?>
