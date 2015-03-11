@@ -28,3 +28,9 @@ CREATE TABLE `hits` (
   PRIMARY KEY (`HitID`),
   KEY `Search` (`Language`,`Timestamp`,`PageID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `hits`
+	ADD INDEX `RequestID` (`RequestID`),
+	ADD INDEX `Timestamp` (`Timestamp`),
+	ADD INDEX `PageID` (`PageID`),
+	DROP INDEX `Search`;
