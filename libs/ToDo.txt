@@ -10,11 +10,19 @@ Create auth module for One Time Passwords / Google Authenticator or similar
 
 Update AD auth module with latest adLDAP lib and adapt it to new Admin_Auth class.
 
-Implement support for the whole framework in PostgreSQL
+Implement support for the whole framework in PostgreSQL and SQLite.
 
 Add support for multiple authentication (two part for example).
 
 In user/pass client, allow https://user:password@..../
+
+Store profileId + sessionId in DB to allow for kicking users and force logout at password change.
+
+Toggle allow/disallow auto-match profile on common field (e-mail?). Should be default to OFF.
+For example, user is validated on Service1 and PwService2. Service1 is registered on the profileId.
+User logs in on Service2 and gains access to same profileId.
+Global ON/OFF + Per profile ON/OFF. OFF being global default. Should only be used by trusted sources, and not
+if services like OpenID is used.
 
 Add login modules for:
  Twitter
@@ -30,4 +38,5 @@ Add login modules for:
  Active Directory
  LDAP (Generic)
  HTTP Basic Auth (htaccess)
-
+ MySQL (current should be renamed Native)
+ IBM iSeries
