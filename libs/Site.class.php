@@ -116,7 +116,7 @@ class Site {
                   RawHead, ServerHost, SessionID, Method,
                   Cookie,        Session,        POST,        GET,        SERVER,
                   Cookie_Serial, Session_Serial, POST_Serial, GET_Serial, SERVER_Serial,
-                  RequestID
+                  RequestID, Timestamp
                )
             VALUES (
                '", $this->LoadStart, "',
@@ -141,7 +141,8 @@ class Site {
                '", serialize($tempPOST), "',
                '", serialize($_GET), "',
                '", serialize($_SERVER), "',
-               '", $this->RequestID, "'
+               '", $this->RequestID, "',
+               '", date('Y-m-d H:i:s'), "'
             )
          ");
       }
@@ -460,9 +461,8 @@ class Site {
                and (PageID = '' OR PageID = '",$this->PageID,"')
             ORDER BY
                PageID ASC
-            LIMIT 1
          ");
-         if ($this->db->num_rows() == 1) {
+         if ($this->db->num_rows() >= 1) {
             $entry = $this->db->fetch_assoc();
             $c = &$entry['ContentType'];
             $k = &$entry['AttributeName'];

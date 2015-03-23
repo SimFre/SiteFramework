@@ -62,9 +62,8 @@ class Admin_Auth_MySQL extends Admin_Auth {
 
       $this->db->q("
          UPDATE users
-         SET    Password = '", $encpw, "', Modified = NOW()
+         SET    Password = '", $encpw, "', Modified = current_timestamp
          WHERE  UserID = ", $user->getExternalReference(), "
-         LIMIT 1
       ");
 
       if ($this->db->affected_rows() == 1) {
@@ -88,7 +87,6 @@ class Admin_Auth_MySQL extends Admin_Auth {
             IF(Active = 'Yes', 1, 0) as active
          FROM users u
          WHERE u.Mail = '", $mail, "' AND Erased is null
-         LIMIT 1
       ");
 
       if ($this->db->num_rows() == 1) {
@@ -110,7 +108,6 @@ class Admin_Auth_MySQL extends Admin_Auth {
             IF(Active = 'Yes', 1, 0) as active
          FROM users u
          WHERE u.UserID = '", $externalReference, "' AND Erased is null
-         LIMIT 1
       ");
       if ($this->db->num_rows() == 1) {
          $user = $this->db->fetch_object();
@@ -131,7 +128,6 @@ class Admin_Auth_MySQL extends Admin_Auth {
             IF(Active = 'Yes', 1, 0) as active
          FROM users u
          WHERE u.Username = '", $username, "' AND Erased is null
-         LIMIT 1
       ") or Log::d($this->db->error());
 
       if ($this->db->num_rows() == 1) {
@@ -150,7 +146,7 @@ class Admin_Auth_MySQL extends Admin_Auth {
    public function UpdateLastLogin(&$user) {
       $i = $user->getExternalReference();
       $user->setParam("lastLogin", date("Y-m-d H:i:s"));
-      $this->db->q("UPDATE users SET LastIP = '", $_SERVER['REMOTE_ADDR'], "', LastLogin = NOW() WHERE UserID = '", $i, "' limit 1")
+      $this->db->q("UPDATE users SET LastIP = '", $_SERVER['REMOTE_ADDR'], "', LastLogin = current_timestamp WHERE UserID = '", $i, "'")
          or Log::d($this->db->error());
 
       if ($this->db->affected_rows() == 1) {
@@ -178,7 +174,7 @@ class Admin_Auth_MySQL extends Admin_Auth {
                '", $firstname, "',
                '", $surname, "',
                'native',
-               NOW()
+               current_timestamp
             )
          ");
          return $this->db->insert_id();
@@ -187,7 +183,7 @@ class Admin_Auth_MySQL extends Admin_Auth {
 
    public function DeleteUser($externalReference) {
       $externalReference = (int) $externalReference;
-      $this->db->q("UPDATE users SET Erased = NOW() WHERE UserID = $externalReference");
+      $this->db->q("UPDATE users SET Erased = current_timestamp WHERE UserID = $externalReference");
       return true;
    }
 

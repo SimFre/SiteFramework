@@ -32,10 +32,10 @@ class FileManager {
             StartCounter,
             FinishCounter,
             fi.Language,
-            case when AvailableFrom <= NOW() and AvailableTo >= NOW() then 1 else 0 end as Available
+            case when AvailableFrom <= current_timestamp and AvailableTo >= current_timestamp then 1 else 0 end as Available
          FROM files fi
          LEFT JOIN files_categories fc ON fi.CatID=fc.CatID
-         WHERE FileID = ", $FileID," LIMIT 1
+         WHERE FileID = ", $FileID,"
       ");
 
       if ($this->db->num_rows($result) == 1) {
@@ -73,7 +73,6 @@ class FileManager {
             files_categories
          WHERE
             Name = '", $Category, "' and Language = '", $Language, "'
-         LIMIT 1
       ");
 
       if ($this->db->num_rows() == 1) {
@@ -91,8 +90,8 @@ class FileManager {
             WHERE
                CatID = ", $v->CatID, "
                AND Visible = 'Y'
-               AND AvailableFrom < NOW()
-               AND AvailableTo > NOW()
+               AND AvailableFrom < current_timestamp
+               AND AvailableTo > current_timestamp
                ORDER BY Sorting DESC, FileID DESC, Title ASC, Filename ASC
          ");
 
@@ -154,7 +153,7 @@ class FileManager {
                '", $hash, "',
                '", $tempFilename, "',
                '", $this->admin->profileId, "',
-               NOW(),
+               current_timestamp,
                '", $MIME, "'
             )
          ");

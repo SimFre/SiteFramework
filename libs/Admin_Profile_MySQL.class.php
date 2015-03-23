@@ -16,7 +16,7 @@ class Admin_Profile_MySQL extends Admin_Profile {
          insert into profiles (
              regDate, firstname, surname, email
          ) values (
-            now(),
+            current_timestamp,
             '", $user->getParam("firstname"),"',
             '", $user->getParam("surname"), "',
             '", $user->getParam("mail"),"'
@@ -31,7 +31,7 @@ class Admin_Profile_MySQL extends Admin_Profile {
    // @param int profile number
    // @return boolean
    public function idExists($profileId) {
-      $this->db->q("select profileId as c from profiles where profileId='", $profileId, "' limit 1");
+      $this->db->q("select profileId as c from profiles where profileId='", $profileId, "'");
       if ($this->db->num_rows() == 1) {
          return true;
       }
@@ -51,7 +51,6 @@ class Admin_Profile_MySQL extends Admin_Profile {
             AuthModule = '", $module, "'
             and ExternalReference = '", $ref, "'
             and Erased is null
-         limit 1
       ");
 
       if ($this->db->num_rows() == 0) {
@@ -90,7 +89,6 @@ class Admin_Profile_MySQL extends Admin_Profile {
             email = '", $user->getParam("mail"), "',
             active = '", $active, "'
          where profileId = '", $profileId, "'
-         limit 1
       ");
       $this->setById($profileId);
    }
@@ -105,7 +103,7 @@ class Admin_Profile_MySQL extends Admin_Profile {
             '", $module, "',
             '", $reference, "',
             '", $profileId, "',
-            now()
+            current_timestamp
          )
       ");
       return $this->db->insert_id();
@@ -137,7 +135,6 @@ class Admin_Profile_MySQL extends Admin_Profile {
          where
             profileId = '", $profileId, "'
             and erased is null
-         limit 1
       ");
 
       if ($this->db->num_rows() == 0) {

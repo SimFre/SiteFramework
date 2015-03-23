@@ -164,7 +164,7 @@ class Admin_Auth_adLDAP extends Admin {
                   '", ($adInfo[0]['useraccountcontrol'][0] & 2 ? "No" : "Yes"), "',
                   '", $this->default_language, "',
                   'ActiveDirectory',
-                  NOW(),
+                  current_timestamp,
                   '", $ext, "'
                )
             ");
@@ -179,7 +179,7 @@ class Admin_Auth_adLDAP extends Admin {
 
    public function DeleteUser($uid) {
       $uid = (int) $uid;
-      $this->db->q("UPDATE users SET Erased = NOW() WHERE UserID = $uid");
+      $this->db->q("UPDATE users SET Erased =  WHERE UserID = $uid");
       return true;
    }
 
@@ -195,7 +195,7 @@ class Admin_Auth_adLDAP extends Admin {
             INSERT INTO users (Language, Type, Created, ExternalReference) VALUES (
                '", $this->default_language, "',
                'ActiveDirectory',
-               NOW(),
+               current_timestamp,
                '", $ext, "'
             )
          ");
@@ -219,10 +219,9 @@ class Admin_Auth_adLDAP extends Admin {
             Firstname = '", $user->firstname, "',
             Surname   = '", $user->surname, "',
             Mail      = '", $user->email, "',
-            LastLogin = NOW()
+            LastLogin = current_timestamp
          WHERE
             UserID = '", $i, "'
-         LIMIT 1
       ");
       if ($this->db->affected_rows() == 1) {
          return true;

@@ -1,0 +1,5 @@
+
+find . -name mysql_\* -exec cat "{}"  \; | mysql -uUSERNAME -p databaseName
+
+find . -name sqlite_\* -exec cat {}  \; | sqlite3 site.db
+

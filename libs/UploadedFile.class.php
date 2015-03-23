@@ -75,7 +75,7 @@ class UploadedFile {
                   //error_log("Setting Key: " . $key . ", Value: " . $value);
                   $this->$key = $value;
                   //error_log(var_export($this->db, true));
-                  $this->db->q("UPDATE files SET $key = '", $value, "' WHERE FileID = ", $this->FileID, " LIMIT 1");
+                  $this->db->q("UPDATE files SET $key = '", $value, "' WHERE FileID = ", $this->FileID);
                   break;
                }
             }
@@ -96,16 +96,15 @@ class UploadedFile {
       $this->db->q("
          UPDATE files SET
             Eraser = '", $this->admin->profileId, "',
-            Erased = NOW(),
-            AvailableTo = NOW()
+            Erased = current_timestamp,
+            AvailableTo = current_timestamp
          WHERE
             FileID = '", $this->FileID, "'
-         LIMIT 1
       ");
    }
 
    function purge() {
-      //$this->db->q("DELETE FROM files WHERE FileID = '", $this->FileID, "' LIMIT 1");
+      //$this->db->q("DELETE FROM files WHERE FileID = '", $this->FileID, "'");
       $p = $this->basepath . "/" . $this->Language . "/" . $this->Folder;
       unlink($p . "/" . $this->RealName);
       $d = scandir($p);
@@ -118,7 +117,7 @@ class UploadedFile {
       //error_log("Starting");
       $Folder = "";
       if (intval($Category) == 0) {
-         $this->db->q("SELECT CatID, Folder FROM files_categories WHERE Name = '", $Category, "' AND Language = '", $this->Language, "' LIMIT 1");
+         $this->db->q("SELECT CatID, Folder FROM files_categories WHERE Name = '", $Category, "' AND Language = '", $this->Language, "'");
          if ($this->db->num_rows() == 1) {
             $c = $this->db->fetch_object();
             $Category = (int) $c->CatID;
@@ -132,7 +131,7 @@ class UploadedFile {
       }
       else {
          $Category = (int) $Category;
-         $this->db->q("SELECT Folder FROM files_categories WHERE CatID = ", $Category, " AND Language = '", $this->Language, "' LIMIT 1");
+         $this->db->q("SELECT Folder FROM files_categories WHERE CatID = ", $Category, " AND Language = '", $this->Language, "'");
          if ($this->db->num_rows() == 1) {
             $c = $this->db->fetch_object();
             $Folder = $c->Folder;
@@ -211,7 +210,6 @@ class UploadedFile {
                CatID    = '", $Category, "'
             WHERE
                FileID = ", $this->FileID, "
-            LIMIT 1
          ");
 
          return true;
