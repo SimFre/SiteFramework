@@ -40,3 +40,6 @@ Add login modules for:
  HTTP Basic Auth (htaccess)
  MySQL (current should be renamed Native)
  IBM iSeries
+
+
+Upon successful login, destroy current session and generate a new one to prevent Session Fixation.
