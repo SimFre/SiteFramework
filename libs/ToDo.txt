@@ -43,3 +43,15 @@ Add login modules for:
 
 
 Upon successful login, destroy current session and generate a new one to prevent Session Fixation.
+
+Generate and check against a synchronize token on all forms to protect against Cross Site Request Forgery. So when a form is displayed, a random ID is given to it. When it's posted back, the ID is verified. This will make sure that the request comes from the form and not from a mallicious attacker using the same login cookie for example.
+
+Use the right verbs for each action.
+GET - SELECT
+PUT - UPDATE
+POST - INSERT
+DELETE - DELETE
+If GET must be used, like for links, then synchronized token should be used to make sure that the right action is taken.
+
+Header set Content-Security-Policy: frame-options 'deny'; # Chrome / Firefox
+Header set X-Content-Security-Policy: frame-options 'deny'; # Internet Explorer
