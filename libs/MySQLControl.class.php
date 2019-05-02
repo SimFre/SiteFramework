@@ -171,6 +171,24 @@ class MySQLControl {
       }
    }
 
+   function result($resource = null, $index = 0) {
+      if ($resource === false) {
+         return false;
+     }
+     elseif (!is_null($resource)) {
+         $x = mysqli_fetch_row($resource);
+         return $x[$index];
+
+      }
+      elseif (!is_null($this->lastQueryResource)) {
+         $x = mysqli_fetch_row($this->lastQueryResource);
+         return $x[$index];
+      }
+      else {
+         return false;
+      }
+   }
+
    /**
    // q() is the method for sending SQL into the MySQL server. It takes a
    // minumum of one argument, that being a query. The idea with this spcial
@@ -222,7 +240,7 @@ class MySQLControl {
          return $this->lastQueryResource;
       }
    }
-
+   
    function toArray($resource = null,$oneFieldArray = false) {
       if (!is_null($resource)) { }
       elseif (!is_null($this->lastQueryResource)) { $resource = &$this->lastQueryResource; }
