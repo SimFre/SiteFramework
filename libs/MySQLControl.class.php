@@ -1,6 +1,6 @@
 <?php
 class MySQLControl {
-   // Version timestamp: 2008-12-23 09:41:56
+   // Version timestamp: 2019-07-17 17:55:06
 
    //
    // MySQL Specific instructions.
@@ -78,6 +78,14 @@ class MySQLControl {
       }
    }
 
+   function close() {
+      @mysqli_close($this->session);
+   }
+
+   function free_result() {
+      mysqli_free_result($this->session);
+   }
+
    function insert_id($resource = null) {
       if (!is_null($resource)) {
          return mysqli_insert_id($resource);
@@ -105,6 +113,21 @@ class MySQLControl {
       }
       else {
          return mysqli_error($this->session);
+      }
+   }
+
+   function fetch_array($resource = null) {
+      if ($resource === false) {
+         return false;
+     }
+     elseif (!is_null($resource)) {
+         return mysqli_fetch_array($resource);
+      }
+      elseif (!is_null($this->lastQueryResource)) {
+         return mysqli_fetch_array($this->lastQueryResource);
+      }
+      else {
+         return false;
       }
    }
 
