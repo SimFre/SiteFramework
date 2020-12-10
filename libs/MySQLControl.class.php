@@ -20,10 +20,6 @@ class MySQLControl {
    // Number of executed SQL queries
    public $counter = 0;
 
-   //
-   // Magic quotes on/off. Will be set in __construct()
-   public $GPC;
-
    public $lastQueryResource = null;
    public $lastQueryText = "";
 
@@ -32,13 +28,8 @@ class MySQLControl {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-   /**
-   // Construct sets the GPC-variable which will be used by q() for escaping
-   // queries properly.
-   **/
-   function __construct($datum = null) {
-      $this->GPC = get_magic_quotes_gpc();
-   }
+   //function __construct() {
+   //}
 
    function __destruct() {
       @mysqli_close($this->session);
@@ -233,12 +224,7 @@ class MySQLControl {
 
             }
             else {
-               if ($this->GPC) {
-                  $sql .= mysqli_real_escape_string($this->session, stripslashes($peice));
-               }
-               else {
-                  $sql .= mysqli_real_escape_string($this->session, $peice);
-               }
+               $sql .= mysqli_real_escape_string($this->session, $peice);
             }
          }
       }
