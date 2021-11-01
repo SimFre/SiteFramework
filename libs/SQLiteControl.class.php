@@ -10,7 +10,7 @@ class SQLiteControl {
 
    //
    // SQLite Specific vars, used mostly for internal use.
-   public $session  = false;
+   public $session;
 
    //
    // Number of executed SQL queries
@@ -18,7 +18,7 @@ class SQLiteControl {
 
    //
    // Magic quotes on/off. Will be set in __construct()
-   public $GPC;
+   public $GPC = false; // DEPRECATED
 
    public $lastQueryResource = null;
    public $lastQueryText = "";
@@ -33,11 +33,11 @@ class SQLiteControl {
    // queries properly.
    **/
    function __construct() {
-      $this->GPC = get_magic_quotes_gpc();
+      // $this->GPC = get_magic_quotes_gpc();
    }
 
    function __destruct() {
-      @this->session->close());
+      @$this->session->close();
    }
 
    function __toString() {
@@ -151,7 +151,7 @@ class SQLiteControl {
       else {
          $rows = 0;
          $r->reset();
-         while ($result->fetchArray()) {
+         while ($r->fetchArray()) {
             $rows += 1;
          }
          $r->reset();
@@ -167,7 +167,7 @@ class SQLiteControl {
    // so to speak.
    **/
    function q() {
-      if (!$this->session) { $this->connect(); }
+      if (is_null($this->session)) { $this->connect(); }
       $args = func_get_args();
       if (count($args) < 1) { return false; }
       elseif (count($args) == 1) { $sql = $args[0]; }
@@ -180,12 +180,7 @@ class SQLiteControl {
 
             }
             else {
-               if ($this->GPC) {
-                  $sql .= $this->session->escapeString(stripslashes($peice));
-               }
-               else {
-                  $sql .= $this->session->escapeString($peice);
-               }
+               $sql .= $this->session->escapeString($peice);
             }
                
          }
@@ -207,6 +202,8 @@ class SQLiteControl {
          return $this->lastQueryResource;
       }
       else {
+         // If this one throws an error saying the table cannot be found,
+         // it might mean that the database file has not been found.
          $this->lastQueryResource = $this->session->query($sql);
          return $this->lastQueryResource;
       }
@@ -218,11 +215,11 @@ class SQLiteControl {
       else { return false; }
 
       $export = array();
-      if ($oneFieldArray && $resource->numColumns()) == 1) {
+      if ($oneFieldArray && $resource->numColumns()) {
          while ($data = $resource->fetchArray(SQLITE3_NUM)) { $export[] = $data[0]; }
       }
       else{
-         while ($data = $resource->fetchArray(SQLITE3_ASSOC) { $export[] = $data; }
+         while ($data = $resource->fetchArray(SQLITE3_ASSOC)) { $export[] = $data; }
       }
       return $export;
    }

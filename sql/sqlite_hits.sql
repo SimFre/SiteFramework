@@ -1,5 +1,5 @@
 CREATE TABLE "hits" (
-  "HitID" int(10) NOT NULL,
+  "HitID" integer,
   "RequestID" char(36) NOT NULL DEFAULT 'Undefined',
   "LoadTime" float DEFAULT NULL,
   "Timestamp" timestamp NOT NULL,
