@@ -1,5 +1,6 @@
 <?php
 class Site {
+   public $TablePrefix = "";
    public $Head;
    public $Body;
    public $BodyParam;
@@ -18,7 +19,7 @@ class Site {
    public $TemplatePath;
    public $Language;
    protected $Languages;
-   public $admin;
+   //public $admin;
    public $db;
    public $FileManager;
    public $Plugin;
@@ -68,7 +69,7 @@ class Site {
          $C['BODY'] = ob_get_contents(); // This might cause memory issues in the future.
          ob_clean();
 
-         $admin = &$this->admin;
+         //$admin = &$this->admin;
          $site = &$this;
          $db = &$this->db;
          $FileManager = &$this->FileManager;
@@ -111,7 +112,7 @@ class Site {
       if ($this->setLogRequest()) {
          $this->db->q("
             INSERT INTO
-               hits (
+               ".$this->TablePrefix."hits (
                   LoadStart, LoadStop, LoadTime, PageID, IP, Language, URL, RequestURI,
                   RawHead, ServerHost, SessionID, Method,
                   Cookie,        Session,        POST,        GET,        SERVER,
@@ -171,7 +172,7 @@ class Site {
             $this->PageID = $value;
             $this->db->q("
                SELECT AttributeName, AttributeValue, ContentType
-               FROM attributes WHERE
+               FROM ".$this->TablePrefix."attributes WHERE
                Language = '{$this->Language}' AND
                (PageID = '' OR PageID = '",$this->PageID,"')
                ORDER BY AttributeName ASC, PageID ASC
@@ -244,7 +245,7 @@ class Site {
    //   // Make sure the file gets a unique filename
    //   $filename = $_FILES[$Field]['name'];
    //
-   //   $search  = "âáàåäöôóòéèêøæÂÁÀÅÄÖÔÓÒÉÈÊØÆ";
+   //   $search  = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
    //   $replace = "aaaaaooooeeeoaAAAAAOOOOEEEOA";
    //   $s = array();
    //   $r = array();
@@ -454,7 +455,7 @@ class Site {
       else {
          $this->db->q("
             SELECT AttributeName, AttributeValue, ContentType
-            FROM attributes
+            FROM ".$this->TablePrefix."attributes
             WHERE
                AttributeName = '", $match, "'
                and Language = '", $this->Language, "'
